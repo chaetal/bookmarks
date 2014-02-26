@@ -1,0 +1,119 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Bookmarks</title>
+      <script src="../../support/amber.js"></script>
+      <script src="../../support/requirejs/require.min.js"></script>
+      <script type="text/javascript">
+        require.config({ paths: {
+          'example_bookmark': 'js', // mapping for compiled .js files
+          'example_bookmark/_source': 'st' // mapping for smalltalk source files
+        }});
+
+  require(['amber/devel', 'example_bookmark/Bookmark'], function (smalltalk) {
+  // up to 0.12.2
+  smalltalk.defaultAmdNamespace = "example_bookmark"; //used for all new packages in IDE
+  smalltalk.initialize();
+  // since 0.12.3
+  smalltalk.initialize({
+    "transport.defaultAmdNamespace": "example_bookmark"  //used for all new packages in IDE
+  });
+});
+
+                
+      </script>
+<style>
+ /* define height and width of scrollable area. Add 16px to width for scrollbar          */
+        div.scroll-table {
+            clear: both;
+            border: 1px solid #963;
+            height: 185px;
+            overflow: auto;
+            width: 656px
+        }
+        #BookmarkEditor{
+            border: 1px solid #963;
+            width: 500px;
+            height:200px;
+    
+        }
+        #divNew{
+            border: 1px solid #963;
+            width: 850px;
+            height:70px;
+    
+        }
+        
+        /* Reset overflow value to hidden for all non-IE browsers. */
+        html>body div.scroll-table {
+            overflow: hidden;
+            width: 656px
+        }
+   
+        /* define width of table. Add 16px to width for scrollbar.           */
+        /* All other non-IE browsers.                                        */
+        html>body div.scroll-table table {
+            border-collapse: collapse;
+            width: 656px;
+        }
+  
+        /* set THEAD element to have block level attributes. All other non-IE browsers            */
+        /* this enables overflow to work on TBODY element. All other non-IE, non-Mozilla browsers */
+        html>body thead.fixedHeader tr {
+            display: block;
+            width: 97%;
+            background-color: lightgray;
+        }
+        /* define the table content to be scrollable                                              */
+        /* set TBODY element to have block level attributes. All other non-IE browsers            */
+        /* this enables overflow to work on TBODY element. All other non-IE, non-Mozilla browsers */
+        /* induced side effect is that child TDs no longer accept width: auto                     */
+        html>body tbody.scrollContent {
+            display: block;
+            height: 162px;
+            overflow: scroll;
+            width: 100%
+        }
+        /* define width of TH elements: 1st, 2nd, and 3rd respectively.          */
+        /* Add 16px to last TH for scrollbar padding. All other non-IE browsers. */
+        /* http://www.w3.org/TR/REC-CSS2/selector.html#adjacent-selectors        */
+        html>body thead.fixedHeader th {
+            width: 100px;
+/*            border: 1px solid #963;*/
+        }
+        html>body thead.fixedHeader th + th {
+            width: 300px
+        }
+        html>body thead.fixedHeader th + th + th {
+            width: 140px
+        }
+       html>body thead.fixedHeader th + th + th+th {
+            width: 100px
+        }
+        /* define width of TD elements: 1st, 2nd, and 3rd respectively.          */
+        /* All other non-IE browsers.                                            */
+        /* http://www.w3.org/TR/REC-CSS2/selector.html#adjacent-selectors        */
+        html>body tbody.scrollContent td {
+            width: 100px;
+            border: 1px solid #963;
+    
+        }
+        html>body tbody.scrollContent td + td {
+            width: 300px
+        }
+        html>body tbody.scrollContent td + td + td {
+            width: 140px
+        }
+       html>body tbody.scrollContent td + td + td +td {
+            width: 100px
+        }
+ 
+</style>
+    </head>
+    <body>
+      <article>
+        <h1>Bookmarks</h1>
+        <button onclick="require('amber_vm/smalltalk').Browser._open()">class browser</button>
+      </article>
+    </body>
+  </html>
