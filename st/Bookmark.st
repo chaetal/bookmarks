@@ -68,13 +68,17 @@ newWithUrl: urlString comment: commentString author: authorString date: aDate
 ! !
 
 Widget subclass: #BookmarkList
-	instanceVariableNames: 'bookmarkList'
+	instanceVariableNames: 'listener bookmarkList'
 	package: 'Bookmark'!
 
 !BookmarkList methodsFor: 'not yet classified'!
 
 add: aBookmark
 bookmarkList add: aBookmark
+!
+
+at: anInteger
+^bookmarkList at: anInteger
 !
 
 bookmarkList
@@ -85,11 +89,12 @@ initialize
  bookmarkList:= OrderedCollection new.
 !
 
-initialize1
-"надо удалить"
-|collection|
+listener
+^listener
+!
 
-^collection.
+listener: anObject
+listener:= anObject.
 !
 
 nextId
@@ -105,6 +110,8 @@ size
 ^bookmarkList size
 ! !
 
+BookmarkList class instanceVariableNames: 'defaultBookmarkList'!
+
 !BookmarkList class methodsFor: 'not yet classified'!
 
 createExample1
@@ -113,6 +120,10 @@ bml := self new initialize.
 bml add: (Bookmark newWithUrl: 'http://url.ru' comment: 'коментарий1' author: 'Петров Иван' date: '21.01,2014' ); add: (Bookmark newWithUrl: 'http://mail.ru' comment: 'коментарий2' author: 'Иванов Петр…' date: '22.01.2014');
  add:(Bookmark newWithUrl: 'http://url2.ru' comment: 'коментарий3' author: 'Крылов Сергей' date: '22.01,2014' ).
  ^ bml
+!
+
+defaultBookmarkList 
+^ defaultBookmarkList  ifNil: [defaultBookmarkList  := self createExample1].
 !
 
 initialize1
@@ -141,6 +152,10 @@ lastId: anId
  lastId:=anId
 !
 
+model: aBookmarkList
+ model:=aBookmarkList
+!
+
 newActiveRecord: anActiveRecord
 
 activeRecord:= anActiveRecord.
@@ -151,12 +166,40 @@ activeRecord:= anActiveRecord.
 addBookmark: anUrl comment: aComment author: anAuthor date: aDate html: html
 |aBookmark aTableRecord tableView Id  | 
 
+"tableView:= '#bookmark tr:last' asJQuery."
+aBookmark:= (Bookmark newWithUrl: anUrl comment: aComment author: anAuthor date: aDate ).
+model add: aBookmark.
+self addDrawOn: html.
+"Id:=self nextId."
+"aTableRecord:=TableRecord newWithId: Id object: aBookmark."
+"table at:Id put: aTableRecord."
+"self halt."
+"tableView after:[ self renderBookmarkAdd: aTableRecord on: html]."
+!
+
+addBookmarkOld: anUrl comment: aComment author: anAuthor date: aDate html: html
+|aBookmark aTableRecord tableView Id  | 
+
 "doc:= '#document' asJQuery."
 tableView:= '#bookmark tr:last' asJQuery.
 aBookmark:= (Bookmark newWithUrl: anUrl comment: aComment author: anAuthor date: aDate ).
 model add: aBookmark.
 Id:=self nextId.
 aTableRecord:=TableRecord newWithId: Id object: aBookmark.
+table at:Id put: aTableRecord.
+"self halt."
+tableView after:[ self renderBookmarkAdd: aTableRecord on: html].
+!
+
+addDrawOn: html
+|aBookmark aTableRecord tableView Id  | 
+
+"doc:= '#document' asJQuery."
+tableView:= '#bookmark tr:last' asJQuery.
+"aBookmark:= (Bookmark newWithUrl: anUrl comment: aComment author: anAuthor date: aDate ).
+model add: aBookmark."
+Id:=self nextId.
+aTableRecord:=TableRecord newWithId: Id object: (model at: model size).
 table at:Id put: aTableRecord.
 "self halt."
 tableView after:[ self renderBookmarkAdd: aTableRecord on: html].
@@ -192,90 +235,17 @@ aBookmark:=( table at:anId) object.
 model remove: aBookmark.
 ! !
 
-!BookmarksView methodsFor: 'for deletion'!
-
-addBookmark: html
-"удалить"
-!
-
-addBookmark: anUrl comment: aComment author: anAuthor date: aDate
-"удалить"
-!
-
-changeActiveRecord: newRecord 
-
-"activetr css: 'background-color' set: 'white'.self newActiveRecord: aNumber. tr css: 'background-color' set: 'lightblue'] ifFalse: [self newActiveRecord:0.tr css: 'background-color' set: 'white']"
-!
-
-renderBookmark: aBookmark on: html
-"уже не использую"
-(html tr with: [ html td with:aBookmark url. html td with: aBookmark comment. html td with: aBookmark author. html td with: aBookmark date])
-!
-
-renderBookmark: aBookmark table: aTableRecord  on: html
-"удалить"
-(html tr with: [ html td with:aBookmark url. html td with: aBookmark comment. html td with: aBookmark author. html td with: aBookmark date])
-!
-
-renderEditorOn: html
-"удалить"
-
-| dt url comment author date tbl| 
-dt :=( Date now) asLocaleString.
-"self halt."
-html form
-     id: 'BookmarkEditor';
-	 with:[
-		 html h2:'dfbffghg'.
-	html label
-		with: 'Ссылка'.
-	html input
-        id: 'url'; 	
-	    class:  'url';
-		value: ('').
-		html br.
-		html label
-		with: 'Комментарий'.
-	html input
-	    id: 'comment';
-	    class: 'comment';
-		value: ('').	
-		html br.
-	html label
-		with: 'Автор'.
-	html input
-	    id: 'author';
-	    class: 'author';
-		value: ('').
-		html br.
-	html label
-		with: 'Дата'.
-	html input
-	    id: 'date';
-	    class: 'date';
-		value: (dt).		
-
-        url:= '#url' asJQuery.
-		comment:= '#comment' asJQuery.
-		author:= '#author' asJQuery.
-		date:= '#date' asJQuery.
-		html br.
-	html button
-		with: 'Добавить';
-		onClick: [ self addBookmark:(url val) asString comment: ( comment val) asString author: (author val) asString date: ( date val) asString html: html ].
-        "self halt.   			"
-		].
-!
-
-selection
-"удалить"
-! !
-
 !BookmarksView methodsFor: 'initialization'!
+
+begin
+| button |
+button := '#init' asJQuery.
+button click: [BookmarksView tryExample].
+!
 
 initialize
 	super initialize.
-	model:=BookmarkList createExample1.
+	"model:=BookmarkList createExample1."
 	"table:=OrderedCollection new."
 	table:=Dictionary new.
 	activeRecord:=0.
@@ -513,13 +483,22 @@ aNumber ~= activeRecord
 
 !BookmarksView class methodsFor: 'example'!
 
+newOn: aBookmarkList
+|instance|
+  instance := self new.
+  instance model: aBookmarkList.
+  aBookmarkList listener: self.
+  ^ instance
+!
+
 tryExample
 	"In order to play with the Counter, just select the
 	doit below and press the Do it button. Then take a
 	look in the HTML document above the IDE."
 
 	"BookmarksView tryExample"
-		self new appendToJQuery: 'body' asJQuery
+		(self newOn: BookmarkList defaultBookmarkList )appendToJQuery: 'body' asJQuery
+	"	self new appendToJQuery: 'body' asJQuery"
 ! !
 
 Widget subclass: #TableRecord

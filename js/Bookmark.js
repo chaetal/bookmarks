@@ -251,7 +251,7 @@ referencedClasses: []
 smalltalk.Bookmark.klass);
 
 
-smalltalk.addClass('BookmarkList', smalltalk.Widget, ['bookmarkList'], 'Bookmark');
+smalltalk.addClass('BookmarkList', smalltalk.Widget, ['listener', 'bookmarkList'], 'Bookmark');
 smalltalk.addMethod(
 smalltalk.method({
 selector: "add:",
@@ -264,6 +264,24 @@ return self}, function($ctx1) {$ctx1.fill(self,"add:",{aBookmark:aBookmark},smal
 args: ["aBookmark"],
 source: "add: aBookmark\x0abookmarkList add: aBookmark",
 messageSends: ["add:"],
+referencedClasses: []
+}),
+smalltalk.BookmarkList);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "at:",
+category: 'not yet classified',
+fn: function (anInteger){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+$1=_st(self["@bookmarkList"])._at_(anInteger);
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"at:",{anInteger:anInteger},smalltalk.BookmarkList)})},
+args: ["anInteger"],
+source: "at: anInteger\x0a^bookmarkList at: anInteger",
+messageSends: ["at:"],
 referencedClasses: []
 }),
 smalltalk.BookmarkList);
@@ -305,18 +323,33 @@ smalltalk.BookmarkList);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "initialize1",
+selector: "listener",
 category: 'not yet classified',
 fn: function (){
 var self=this;
-var collection;
 return smalltalk.withContext(function($ctx1) { 
 var $1;
-$1=collection;
+$1=self["@listener"];
 return $1;
-}, function($ctx1) {$ctx1.fill(self,"initialize1",{collection:collection},smalltalk.BookmarkList)})},
+}, function($ctx1) {$ctx1.fill(self,"listener",{},smalltalk.BookmarkList)})},
 args: [],
-source: "initialize1\x0a\x22надо удалить\x22\x0a|collection|\x0a\x0a^collection.",
+source: "listener\x0a^listener",
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.BookmarkList);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "listener:",
+category: 'not yet classified',
+fn: function (anObject){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self["@listener"]=anObject;
+return self}, function($ctx1) {$ctx1.fill(self,"listener:",{anObject:anObject},smalltalk.BookmarkList)})},
+args: ["anObject"],
+source: "listener: anObject\x0alistener:= anObject.",
 messageSends: [],
 referencedClasses: []
 }),
@@ -375,6 +408,7 @@ referencedClasses: []
 smalltalk.BookmarkList);
 
 
+smalltalk.BookmarkList.klass.iVarNames = ['defaultBookmarkList'];
 smalltalk.addMethod(
 smalltalk.method({
 selector: "createExample1",
@@ -405,6 +439,30 @@ args: [],
 source: "createExample1\x0a|bml|\x0abml := self new initialize.\x0abml add: (Bookmark newWithUrl: 'http://url.ru' comment: 'коментарий1' author: 'Петров Иван' date: '21.01,2014' ); add: (Bookmark newWithUrl: 'http://mail.ru' comment: 'коментарий2' author: 'Иванов Петр…' date: '22.01.2014');\x0a add:(Bookmark newWithUrl: 'http://url2.ru' comment: 'коментарий3' author: 'Крылов Сергей' date: '22.01,2014' ).\x0a ^ bml",
 messageSends: ["initialize", "new", "add:", "newWithUrl:comment:author:date:"],
 referencedClasses: ["Bookmark"]
+}),
+smalltalk.BookmarkList.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "defaultBookmarkList",
+category: 'not yet classified',
+fn: function (){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+var $2,$1;
+$2=self["@defaultBookmarkList"];
+if(($receiver = $2) == nil || $receiver == null){
+self["@defaultBookmarkList"]=self._createExample1();
+$1=self["@defaultBookmarkList"];
+} else {
+$1=$2;
+};
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"defaultBookmarkList",{},smalltalk.BookmarkList.klass)})},
+args: [],
+source: "defaultBookmarkList \x0a^ defaultBookmarkList  ifNil: [defaultBookmarkList  := self createExample1].",
+messageSends: ["ifNil:", "createExample1"],
+referencedClasses: []
 }),
 smalltalk.BookmarkList.klass);
 
@@ -446,37 +504,27 @@ smalltalk.BookmarksView);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "addBookmark:",
-category: 'for deletion',
-fn: function (html){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-return self}, function($ctx1) {$ctx1.fill(self,"addBookmark:",{html:html},smalltalk.BookmarksView)})},
-args: ["html"],
-source: "addBookmark: html\x0a\x22удалить\x22",
-messageSends: [],
-referencedClasses: []
-}),
-smalltalk.BookmarksView);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "addBookmark:comment:author:date:",
-category: 'for deletion',
-fn: function (anUrl,aComment,anAuthor,aDate){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-return self}, function($ctx1) {$ctx1.fill(self,"addBookmark:comment:author:date:",{anUrl:anUrl,aComment:aComment,anAuthor:anAuthor,aDate:aDate},smalltalk.BookmarksView)})},
-args: ["anUrl", "aComment", "anAuthor", "aDate"],
-source: "addBookmark: anUrl comment: aComment author: anAuthor date: aDate\x0a\x22удалить\x22",
-messageSends: [],
-referencedClasses: []
-}),
-smalltalk.BookmarksView);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "addBookmark:comment:author:date:html:",
+category: 'action',
+fn: function (anUrl,aComment,anAuthor,aDate,html){
+var self=this;
+var aBookmark,aTableRecord,tableView,Id;
+function $Bookmark(){return smalltalk.Bookmark||(typeof Bookmark=="undefined"?nil:Bookmark)}
+return smalltalk.withContext(function($ctx1) { 
+aBookmark=_st($Bookmark())._newWithUrl_comment_author_date_(anUrl,aComment,anAuthor,aDate);
+_st(self["@model"])._add_(aBookmark);
+self._addDrawOn_(html);
+return self}, function($ctx1) {$ctx1.fill(self,"addBookmark:comment:author:date:html:",{anUrl:anUrl,aComment:aComment,anAuthor:anAuthor,aDate:aDate,html:html,aBookmark:aBookmark,aTableRecord:aTableRecord,tableView:tableView,Id:Id},smalltalk.BookmarksView)})},
+args: ["anUrl", "aComment", "anAuthor", "aDate", "html"],
+source: "addBookmark: anUrl comment: aComment author: anAuthor date: aDate html: html\x0a|aBookmark aTableRecord tableView Id  | \x0a\x0a\x22tableView:= '#bookmark tr:last' asJQuery.\x22\x0aaBookmark:= (Bookmark newWithUrl: anUrl comment: aComment author: anAuthor date: aDate ).\x0amodel add: aBookmark.\x0aself addDrawOn: html.\x0a\x22Id:=self nextId.\x22\x0a\x22aTableRecord:=TableRecord newWithId: Id object: aBookmark.\x22\x0a\x22table at:Id put: aTableRecord.\x22\x0a\x22self halt.\x22\x0a\x22tableView after:[ self renderBookmarkAdd: aTableRecord on: html].\x22",
+messageSends: ["newWithUrl:comment:author:date:", "add:", "addDrawOn:"],
+referencedClasses: ["Bookmark"]
+}),
+smalltalk.BookmarksView);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "addBookmarkOld:comment:author:date:html:",
 category: 'action',
 fn: function (anUrl,aComment,anAuthor,aDate,html){
 var self=this;
@@ -494,9 +542,9 @@ _st(tableView)._after_((function(){
 return smalltalk.withContext(function($ctx2) {
 return self._renderBookmarkAdd_on_(aTableRecord,html);
 }, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-return self}, function($ctx1) {$ctx1.fill(self,"addBookmark:comment:author:date:html:",{anUrl:anUrl,aComment:aComment,anAuthor:anAuthor,aDate:aDate,html:html,aBookmark:aBookmark,aTableRecord:aTableRecord,tableView:tableView,Id:Id},smalltalk.BookmarksView)})},
+return self}, function($ctx1) {$ctx1.fill(self,"addBookmarkOld:comment:author:date:html:",{anUrl:anUrl,aComment:aComment,anAuthor:anAuthor,aDate:aDate,html:html,aBookmark:aBookmark,aTableRecord:aTableRecord,tableView:tableView,Id:Id},smalltalk.BookmarksView)})},
 args: ["anUrl", "aComment", "anAuthor", "aDate", "html"],
-source: "addBookmark: anUrl comment: aComment author: anAuthor date: aDate html: html\x0a|aBookmark aTableRecord tableView Id  | \x0a\x0a\x22doc:= '#document' asJQuery.\x22\x0atableView:= '#bookmark tr:last' asJQuery.\x0aaBookmark:= (Bookmark newWithUrl: anUrl comment: aComment author: anAuthor date: aDate ).\x0amodel add: aBookmark.\x0aId:=self nextId.\x0aaTableRecord:=TableRecord newWithId: Id object: aBookmark.\x0atable at:Id put: aTableRecord.\x0a\x22self halt.\x22\x0atableView after:[ self renderBookmarkAdd: aTableRecord on: html].",
+source: "addBookmarkOld: anUrl comment: aComment author: anAuthor date: aDate html: html\x0a|aBookmark aTableRecord tableView Id  | \x0a\x0a\x22doc:= '#document' asJQuery.\x22\x0atableView:= '#bookmark tr:last' asJQuery.\x0aaBookmark:= (Bookmark newWithUrl: anUrl comment: aComment author: anAuthor date: aDate ).\x0amodel add: aBookmark.\x0aId:=self nextId.\x0aaTableRecord:=TableRecord newWithId: Id object: aBookmark.\x0atable at:Id put: aTableRecord.\x0a\x22self halt.\x22\x0atableView after:[ self renderBookmarkAdd: aTableRecord on: html].",
 messageSends: ["asJQuery", "newWithUrl:comment:author:date:", "add:", "nextId", "newWithId:object:", "at:put:", "after:", "renderBookmarkAdd:on:"],
 referencedClasses: ["Bookmark", "TableRecord"]
 }),
@@ -504,16 +552,48 @@ smalltalk.BookmarksView);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "changeActiveRecord:",
-category: 'for deletion',
-fn: function (newRecord){
+selector: "addDrawOn:",
+category: 'action',
+fn: function (html){
 var self=this;
+var aBookmark,aTableRecord,tableView,Id;
+function $TableRecord(){return smalltalk.TableRecord||(typeof TableRecord=="undefined"?nil:TableRecord)}
 return smalltalk.withContext(function($ctx1) { 
-return self}, function($ctx1) {$ctx1.fill(self,"changeActiveRecord:",{newRecord:newRecord},smalltalk.BookmarksView)})},
-args: ["newRecord"],
-source: "changeActiveRecord: newRecord \x0a\x0a\x22activetr css: 'background-color' set: 'white'.self newActiveRecord: aNumber. tr css: 'background-color' set: 'lightblue'] ifFalse: [self newActiveRecord:0.tr css: 'background-color' set: 'white']\x22",
-messageSends: [],
-referencedClasses: []
+tableView="#bookmark tr:last"._asJQuery();
+Id=self._nextId();
+aTableRecord=_st($TableRecord())._newWithId_object_(Id,_st(self["@model"])._at_(_st(self["@model"])._size()));
+_st(self["@table"])._at_put_(Id,aTableRecord);
+_st(tableView)._after_((function(){
+return smalltalk.withContext(function($ctx2) {
+return self._renderBookmarkAdd_on_(aTableRecord,html);
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"addDrawOn:",{html:html,aBookmark:aBookmark,aTableRecord:aTableRecord,tableView:tableView,Id:Id},smalltalk.BookmarksView)})},
+args: ["html"],
+source: "addDrawOn: html\x0a|aBookmark aTableRecord tableView Id  | \x0a\x0a\x22doc:= '#document' asJQuery.\x22\x0atableView:= '#bookmark tr:last' asJQuery.\x0a\x22aBookmark:= (Bookmark newWithUrl: anUrl comment: aComment author: anAuthor date: aDate ).\x0amodel add: aBookmark.\x22\x0aId:=self nextId.\x0aaTableRecord:=TableRecord newWithId: Id object: (model at: model size).\x0atable at:Id put: aTableRecord.\x0a\x22self halt.\x22\x0atableView after:[ self renderBookmarkAdd: aTableRecord on: html].",
+messageSends: ["asJQuery", "nextId", "newWithId:object:", "at:", "size", "at:put:", "after:", "renderBookmarkAdd:on:"],
+referencedClasses: ["TableRecord"]
+}),
+smalltalk.BookmarksView);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "begin",
+category: 'initialization',
+fn: function (){
+var self=this;
+var button;
+function $BookmarksView(){return smalltalk.BookmarksView||(typeof BookmarksView=="undefined"?nil:BookmarksView)}
+return smalltalk.withContext(function($ctx1) { 
+button="#init"._asJQuery();
+_st(button)._click_((function(){
+return smalltalk.withContext(function($ctx2) {
+return _st($BookmarksView())._tryExample();
+}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
+return self}, function($ctx1) {$ctx1.fill(self,"begin",{button:button},smalltalk.BookmarksView)})},
+args: [],
+source: "begin\x0a| button |\x0abutton := '#init' asJQuery.\x0abutton click: [BookmarksView tryExample].",
+messageSends: ["asJQuery", "click:", "tryExample"],
+referencedClasses: ["BookmarksView"]
 }),
 smalltalk.BookmarksView);
 
@@ -588,19 +668,17 @@ selector: "initialize",
 category: 'initialization',
 fn: function (){
 var self=this;
-function $BookmarkList(){return smalltalk.BookmarkList||(typeof BookmarkList=="undefined"?nil:BookmarkList)}
 function $Dictionary(){return smalltalk.Dictionary||(typeof Dictionary=="undefined"?nil:Dictionary)}
 return smalltalk.withContext(function($ctx1) { 
 smalltalk.BookmarksView.superclass.fn.prototype._initialize.apply(_st(self), []);
-self["@model"]=_st($BookmarkList())._createExample1();
 self["@table"]=_st($Dictionary())._new();
 self["@activeRecord"]=(0);
 self["@lastId"]=(0);
 return self}, function($ctx1) {$ctx1.fill(self,"initialize",{},smalltalk.BookmarksView)})},
 args: [],
-source: "initialize\x0a\x09super initialize.\x0a\x09model:=BookmarkList createExample1.\x0a\x09\x22table:=OrderedCollection new.\x22\x0a\x09table:=Dictionary new.\x0a\x09activeRecord:=0.\x0a\x09lastId :=0.\x0a\x09\x09\x0a\x09",
-messageSends: ["initialize", "createExample1", "new"],
-referencedClasses: ["BookmarkList", "Dictionary"]
+source: "initialize\x0a\x09super initialize.\x0a\x09\x22model:=BookmarkList createExample1.\x22\x0a\x09\x22table:=OrderedCollection new.\x22\x0a\x09table:=Dictionary new.\x0a\x09activeRecord:=0.\x0a\x09lastId :=0.\x0a\x09\x09\x0a\x09",
+messageSends: ["initialize", "new"],
+referencedClasses: ["Dictionary"]
 }),
 smalltalk.BookmarksView);
 
@@ -633,6 +711,22 @@ self["@lastId"]=anId;
 return self}, function($ctx1) {$ctx1.fill(self,"lastId:",{anId:anId},smalltalk.BookmarksView)})},
 args: ["anId"],
 source: "lastId: anId\x0a\x0a lastId:=anId",
+messageSends: [],
+referencedClasses: []
+}),
+smalltalk.BookmarksView);
+
+smalltalk.addMethod(
+smalltalk.method({
+selector: "model:",
+category: 'accessing',
+fn: function (aBookmarkList){
+var self=this;
+return smalltalk.withContext(function($ctx1) { 
+self["@model"]=aBookmarkList;
+return self}, function($ctx1) {$ctx1.fill(self,"model:",{aBookmarkList:aBookmarkList},smalltalk.BookmarksView)})},
+args: ["aBookmarkList"],
+source: "model: aBookmarkList\x0a model:=aBookmarkList",
 messageSends: [],
 referencedClasses: []
 }),
@@ -922,72 +1016,6 @@ smalltalk.BookmarksView);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "renderBookmark:on:",
-category: 'for deletion',
-fn: function (aBookmark,html){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3;
-_st(_st(html)._tr())._with_((function(){
-return smalltalk.withContext(function($ctx2) {
-$1=_st(html)._td();
-$ctx2.sendIdx["td"]=1;
-_st($1)._with_(_st(aBookmark)._url());
-$ctx2.sendIdx["with:"]=2;
-$2=_st(html)._td();
-$ctx2.sendIdx["td"]=2;
-_st($2)._with_(_st(aBookmark)._comment());
-$ctx2.sendIdx["with:"]=3;
-$3=_st(html)._td();
-$ctx2.sendIdx["td"]=3;
-_st($3)._with_(_st(aBookmark)._author());
-$ctx2.sendIdx["with:"]=4;
-return _st(_st(html)._td())._with_(_st(aBookmark)._date());
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-$ctx1.sendIdx["with:"]=1;
-return self}, function($ctx1) {$ctx1.fill(self,"renderBookmark:on:",{aBookmark:aBookmark,html:html},smalltalk.BookmarksView)})},
-args: ["aBookmark", "html"],
-source: "renderBookmark: aBookmark on: html\x0a\x22уже не использую\x22\x0a(html tr with: [ html td with:aBookmark url. html td with: aBookmark comment. html td with: aBookmark author. html td with: aBookmark date]) ",
-messageSends: ["with:", "tr", "td", "url", "comment", "author", "date"],
-referencedClasses: []
-}),
-smalltalk.BookmarksView);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "renderBookmark:table:on:",
-category: 'for deletion',
-fn: function (aBookmark,aTableRecord,html){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-var $1,$2,$3;
-_st(_st(html)._tr())._with_((function(){
-return smalltalk.withContext(function($ctx2) {
-$1=_st(html)._td();
-$ctx2.sendIdx["td"]=1;
-_st($1)._with_(_st(aBookmark)._url());
-$ctx2.sendIdx["with:"]=2;
-$2=_st(html)._td();
-$ctx2.sendIdx["td"]=2;
-_st($2)._with_(_st(aBookmark)._comment());
-$ctx2.sendIdx["with:"]=3;
-$3=_st(html)._td();
-$ctx2.sendIdx["td"]=3;
-_st($3)._with_(_st(aBookmark)._author());
-$ctx2.sendIdx["with:"]=4;
-return _st(_st(html)._td())._with_(_st(aBookmark)._date());
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-$ctx1.sendIdx["with:"]=1;
-return self}, function($ctx1) {$ctx1.fill(self,"renderBookmark:table:on:",{aBookmark:aBookmark,aTableRecord:aTableRecord,html:html},smalltalk.BookmarksView)})},
-args: ["aBookmark", "aTableRecord", "html"],
-source: "renderBookmark: aBookmark table: aTableRecord  on: html\x0a\x22удалить\x22\x0a(html tr with: [ html td with:aBookmark url. html td with: aBookmark comment. html td with: aBookmark author. html td with: aBookmark date]) ",
-messageSends: ["with:", "tr", "td", "url", "comment", "author", "date"],
-referencedClasses: []
-}),
-smalltalk.BookmarksView);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "renderBookmarkAdd:id:on:",
 category: 'rendering',
 fn: function (aBookmark,aNumber,html){
@@ -1229,116 +1257,6 @@ return self}, function($ctx1) {$ctx1.fill(self,"renderEditor:On:",{aTableRecord:
 args: ["aTableRecord", "html"],
 source: "renderEditor: aTableRecord On: html\x0a\x0a| dt url comment author date tbl| \x0adt :=( Date now) asLocaleString.\x0a\x22self halt.\x22\x0ahtml div\x0a     id: 'BookmarkEditor';\x0a\x09 with:[\x0a\x09\x09 html h2:'закладка'.\x0a\x09html label\x0a\x09\x09with: 'Ссылка'.\x0a\x09html input\x0a        id: 'newurl'; \x09\x0a\x09    class:  'url';\x0a\x09\x09value: aTableRecord object url.\x0a\x09\x09html br.\x0a\x09\x09html label\x0a\x09\x09with: 'Комментарий'.\x0a\x09html input\x0a\x09    id: 'newcomment';\x0a\x09    class: 'comment';\x0a\x09\x09value: aTableRecord object comment.\x09\x0a\x09\x09html br.\x0a\x09html label\x0a\x09\x09with: 'Автор'.\x0a\x09html input\x0a\x09    id: 'newauthor';\x0a\x09    class: 'author';\x0a\x09\x09value: aTableRecord object author.\x0a\x09\x09html br.\x0a\x09html label\x0a\x09\x09with: 'Дата'.\x0a\x09html input\x0a\x09    id: 'newdate';\x0a\x09    class: 'date';\x0a\x09\x09value: aTableRecord object date.\x09\x09\x0a\x0a        url:= '#newurl' asJQuery.\x0a\x09\x09comment:= '#newcomment' asJQuery.\x0a\x09\x09author:= '#newauthor' asJQuery.\x0a\x09\x09date:= '#newdate' asJQuery.\x0a\x09\x09html br.\x0a\x09html button\x0a\x09\x09with: 'Сохранить';\x0a\x09\x09onClick: [ aTableRecord object url: (url val)asString. aTableRecord object comment: (comment val)asString.  aTableRecord object author: (author val)asString. aTableRecord object date: (date val)asString.self removeElementById: 'BookmarkEditor'html:html.self renderTableOn: html.].\x0a\x09\x09\x0ahtml button\x0a  with: 'Отменить';\x0a  onClick: [ self removeElementById: 'BookmarkEditor'html:html.self renderTableOn: html.].\x0a\x0a        \x22self halt.   \x09\x09\x09\x22\x0a\x09\x09\x22window alert: (url val) asString.\x22\x0a\x09\x09].",
 messageSends: ["asLocaleString", "now", "id:", "div", "with:", "h2:", "label", "input", "class:", "value:", "url", "object", "br", "comment", "author", "date", "asJQuery", "button", "onClick:", "url:", "asString", "val", "comment:", "author:", "date:", "removeElementById:html:", "renderTableOn:"],
-referencedClasses: ["Date"]
-}),
-smalltalk.BookmarksView);
-
-smalltalk.addMethod(
-smalltalk.method({
-selector: "renderEditorOn:",
-category: 'for deletion',
-fn: function (html){
-var self=this;
-var dt,url,comment,author,date,tbl;
-function $Date(){return smalltalk.Date||(typeof Date=="undefined"?nil:Date)}
-return smalltalk.withContext(function($ctx1) { 
-var $1,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$17,$16,$19,$18,$21,$20,$15,$2;
-dt=_st(_st($Date())._now())._asLocaleString();
-$1=_st(html)._form();
-_st($1)._id_("BookmarkEditor");
-$ctx1.sendIdx["id:"]=1;
-$2=_st($1)._with_((function(){
-return smalltalk.withContext(function($ctx2) {
-_st(html)._h2_("dfbffghg");
-$3=_st(html)._label();
-$ctx2.sendIdx["label"]=1;
-_st($3)._with_("Ссылка");
-$ctx2.sendIdx["with:"]=2;
-$4=_st(html)._input();
-$ctx2.sendIdx["input"]=1;
-_st($4)._id_("url");
-$ctx2.sendIdx["id:"]=2;
-_st($4)._class_("url");
-$ctx2.sendIdx["class:"]=1;
-$5=_st($4)._value_("");
-$ctx2.sendIdx["value:"]=1;
-$5;
-_st(html)._br();
-$ctx2.sendIdx["br"]=1;
-$6=_st(html)._label();
-$ctx2.sendIdx["label"]=2;
-_st($6)._with_("Комментарий");
-$ctx2.sendIdx["with:"]=3;
-$7=_st(html)._input();
-$ctx2.sendIdx["input"]=2;
-_st($7)._id_("comment");
-$ctx2.sendIdx["id:"]=3;
-_st($7)._class_("comment");
-$ctx2.sendIdx["class:"]=2;
-$8=_st($7)._value_("");
-$ctx2.sendIdx["value:"]=2;
-$8;
-_st(html)._br();
-$ctx2.sendIdx["br"]=2;
-$9=_st(html)._label();
-$ctx2.sendIdx["label"]=3;
-_st($9)._with_("Автор");
-$ctx2.sendIdx["with:"]=4;
-$10=_st(html)._input();
-$ctx2.sendIdx["input"]=3;
-_st($10)._id_("author");
-$ctx2.sendIdx["id:"]=4;
-_st($10)._class_("author");
-$ctx2.sendIdx["class:"]=3;
-$11=_st($10)._value_("");
-$ctx2.sendIdx["value:"]=3;
-$11;
-_st(html)._br();
-$ctx2.sendIdx["br"]=3;
-_st(_st(html)._label())._with_("Дата");
-$ctx2.sendIdx["with:"]=5;
-$12=_st(html)._input();
-_st($12)._id_("date");
-_st($12)._class_("date");
-$13=_st($12)._value_(dt);
-$13;
-url="#url"._asJQuery();
-$ctx2.sendIdx["asJQuery"]=1;
-url;
-comment="#comment"._asJQuery();
-$ctx2.sendIdx["asJQuery"]=2;
-comment;
-author="#author"._asJQuery();
-$ctx2.sendIdx["asJQuery"]=3;
-author;
-date="#date"._asJQuery();
-date;
-_st(html)._br();
-$14=_st(html)._button();
-_st($14)._with_("Добавить");
-$15=_st($14)._onClick_((function(){
-return smalltalk.withContext(function($ctx3) {
-$17=_st(url)._val();
-$ctx3.sendIdx["val"]=1;
-$16=_st($17)._asString();
-$ctx3.sendIdx["asString"]=1;
-$19=_st(comment)._val();
-$ctx3.sendIdx["val"]=2;
-$18=_st($19)._asString();
-$ctx3.sendIdx["asString"]=2;
-$21=_st(author)._val();
-$ctx3.sendIdx["val"]=3;
-$20=_st($21)._asString();
-$ctx3.sendIdx["asString"]=3;
-return self._addBookmark_comment_author_date_html_($16,$18,$20,_st(_st(date)._val())._asString(),html);
-}, function($ctx3) {$ctx3.fillBlock({},$ctx2,2)})}));
-return $15;
-}, function($ctx2) {$ctx2.fillBlock({},$ctx1,1)})}));
-$ctx1.sendIdx["with:"]=1;
-return self}, function($ctx1) {$ctx1.fill(self,"renderEditorOn:",{html:html,dt:dt,url:url,comment:comment,author:author,date:date,tbl:tbl},smalltalk.BookmarksView)})},
-args: ["html"],
-source: "renderEditorOn: html\x0a\x22удалить\x22\x0a\x0a| dt url comment author date tbl| \x0adt :=( Date now) asLocaleString.\x0a\x22self halt.\x22\x0ahtml form\x0a     id: 'BookmarkEditor';\x0a\x09 with:[\x0a\x09\x09 html h2:'dfbffghg'.\x0a\x09html label\x0a\x09\x09with: 'Ссылка'.\x0a\x09html input\x0a        id: 'url'; \x09\x0a\x09    class:  'url';\x0a\x09\x09value: ('').\x0a\x09\x09html br.\x0a\x09\x09html label\x0a\x09\x09with: 'Комментарий'.\x0a\x09html input\x0a\x09    id: 'comment';\x0a\x09    class: 'comment';\x0a\x09\x09value: ('').\x09\x0a\x09\x09html br.\x0a\x09html label\x0a\x09\x09with: 'Автор'.\x0a\x09html input\x0a\x09    id: 'author';\x0a\x09    class: 'author';\x0a\x09\x09value: ('').\x0a\x09\x09html br.\x0a\x09html label\x0a\x09\x09with: 'Дата'.\x0a\x09html input\x0a\x09    id: 'date';\x0a\x09    class: 'date';\x0a\x09\x09value: (dt).\x09\x09\x0a\x0a        url:= '#url' asJQuery.\x0a\x09\x09comment:= '#comment' asJQuery.\x0a\x09\x09author:= '#author' asJQuery.\x0a\x09\x09date:= '#date' asJQuery.\x0a\x09\x09html br.\x0a\x09html button\x0a\x09\x09with: 'Добавить';\x0a\x09\x09onClick: [ self addBookmark:(url val) asString comment: ( comment val) asString author: (author val) asString date: ( date val) asString html: html ].\x0a        \x22self halt.   \x09\x09\x09\x22\x0a\x09\x09].",
-messageSends: ["asLocaleString", "now", "id:", "form", "with:", "h2:", "label", "input", "class:", "value:", "br", "asJQuery", "button", "onClick:", "addBookmark:comment:author:date:html:", "asString", "val"],
 referencedClasses: ["Date"]
 }),
 smalltalk.BookmarksView);
@@ -1612,21 +1530,6 @@ smalltalk.BookmarksView);
 
 smalltalk.addMethod(
 smalltalk.method({
-selector: "selection",
-category: 'for deletion',
-fn: function (){
-var self=this;
-return smalltalk.withContext(function($ctx1) { 
-return self}, function($ctx1) {$ctx1.fill(self,"selection",{},smalltalk.BookmarksView)})},
-args: [],
-source: "selection\x0a\x22удалить\x22",
-messageSends: [],
-referencedClasses: []
-}),
-smalltalk.BookmarksView);
-
-smalltalk.addMethod(
-smalltalk.method({
 selector: "selection:",
 category: 'rendering',
 fn: function (aNumber){
@@ -1661,17 +1564,40 @@ smalltalk.BookmarksView);
 
 smalltalk.addMethod(
 smalltalk.method({
+selector: "newOn:",
+category: 'example',
+fn: function (aBookmarkList){
+var self=this;
+var instance;
+return smalltalk.withContext(function($ctx1) { 
+var $1;
+instance=self._new();
+_st(instance)._model_(aBookmarkList);
+_st(aBookmarkList)._listener_(self);
+$1=instance;
+return $1;
+}, function($ctx1) {$ctx1.fill(self,"newOn:",{aBookmarkList:aBookmarkList,instance:instance},smalltalk.BookmarksView.klass)})},
+args: ["aBookmarkList"],
+source: "newOn: aBookmarkList\x0a|instance|\x0a  instance := self new.\x0a  instance model: aBookmarkList.\x0a  aBookmarkList listener: self.\x0a  ^ instance",
+messageSends: ["new", "model:", "listener:"],
+referencedClasses: []
+}),
+smalltalk.BookmarksView.klass);
+
+smalltalk.addMethod(
+smalltalk.method({
 selector: "tryExample",
 category: 'example',
 fn: function (){
 var self=this;
+function $BookmarkList(){return smalltalk.BookmarkList||(typeof BookmarkList=="undefined"?nil:BookmarkList)}
 return smalltalk.withContext(function($ctx1) { 
-_st(self._new())._appendToJQuery_("body"._asJQuery());
+_st(self._newOn_(_st($BookmarkList())._defaultBookmarkList()))._appendToJQuery_("body"._asJQuery());
 return self}, function($ctx1) {$ctx1.fill(self,"tryExample",{},smalltalk.BookmarksView.klass)})},
 args: [],
-source: "tryExample\x0a\x09\x22In order to play with the Counter, just select the\x0a\x09doit below and press the Do it button. Then take a\x0a\x09look in the HTML document above the IDE.\x22\x0a\x0a\x09\x22BookmarksView tryExample\x22\x0a\x09\x09self new appendToJQuery: 'body' asJQuery",
-messageSends: ["appendToJQuery:", "new", "asJQuery"],
-referencedClasses: []
+source: "tryExample\x0a\x09\x22In order to play with the Counter, just select the\x0a\x09doit below and press the Do it button. Then take a\x0a\x09look in the HTML document above the IDE.\x22\x0a\x0a\x09\x22BookmarksView tryExample\x22\x0a\x09\x09(self newOn: BookmarkList defaultBookmarkList )appendToJQuery: 'body' asJQuery\x0a\x09\x22\x09self new appendToJQuery: 'body' asJQuery\x22",
+messageSends: ["appendToJQuery:", "newOn:", "defaultBookmarkList", "asJQuery"],
+referencedClasses: ["BookmarkList"]
 }),
 smalltalk.BookmarksView.klass);
 

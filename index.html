@@ -14,6 +14,10 @@
   // up to 0.12.2
   smalltalk.defaultAmdNamespace = "example_bookmark"; //used for all new packages in IDE
   smalltalk.initialize();
+ $(function() {
+    smalltalk.BookmarksView._new()._begin();
+  });
+
   // since 0.12.3
   smalltalk.initialize({
     "transport.defaultAmdNamespace": "example_bookmark"  //used for all new packages in IDE
@@ -114,6 +118,8 @@
       <article>
         <h1>Bookmarks</h1>
         <button onclick="require('amber_vm/smalltalk').Browser._open()">class browser</button>
+        <button id = "init">Запустить</button>
+
       </article>
     </body>
   </html>
