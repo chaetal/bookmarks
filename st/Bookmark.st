@@ -74,7 +74,7 @@ Widget subclass: #BookmarkList
 !BookmarkList methodsFor: 'not yet classified'!
 
 add: aBookmark
-bookmarkList add: aBookmark
+  bookmarkList add: aBookmark
 !
 
 at: anInteger

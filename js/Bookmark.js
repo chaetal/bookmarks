@@ -262,7 +262,7 @@ return smalltalk.withContext(function($ctx1) {
 _st(self["@bookmarkList"])._add_(aBookmark);
 return self}, function($ctx1) {$ctx1.fill(self,"add:",{aBookmark:aBookmark},smalltalk.BookmarkList)})},
 args: ["aBookmark"],
-source: "add: aBookmark\x0abookmarkList add: aBookmark",
+source: "add: aBookmark\x0a  bookmarkList add: aBookmark",
 messageSends: ["add:"],
 referencedClasses: []
 }),
